@@ -47,6 +47,7 @@ class Creature extends Card {
             this.name = name
             this.description = description
             this.manaNeeded = manaNeeded
+
             super.color = color
             this.atack = attack
             this.defence = defence
@@ -61,7 +62,6 @@ interface Player {
 }
 
 class BackToSchoolGamePlayer implements Player {
-
     name: string
     manaDeck: Array<Mana>
     creatureDeck: Array<Creature>
@@ -102,12 +102,11 @@ class Main {
     private game: Game
 
     constructor () {
+        console.log('Game Started.')
         this.game = new Game(
             new BackToSchoolGamePlayer('Jefferson'),
             new BackToSchoolGamePlayer('Icognito'))
         
-        this.game.player
-
         this.game.player.manaDeck.push(new Mana(1))
         this.game.player.manaDeck.push(new Mana(2))
         this.game.player.manaDeck.push(new Mana(3))
