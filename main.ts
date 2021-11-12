@@ -83,7 +83,8 @@ class Game {
     chanllangePlayer: BackToSchoolGamePlayer
     private readonly INITIAL_MANA_AMOUNT: number = 0
 
-    constructor(player: BackToSchoolGamePlayer, chanllangePlayer: BackToSchoolGamePlayer) {
+    constructor(
+        player: BackToSchoolGamePlayer, chanllangePlayer: BackToSchoolGamePlayer) {
         this.player = player
         this.chanllangePlayer = chanllangePlayer
     }
