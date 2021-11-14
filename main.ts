@@ -95,68 +95,59 @@ class Game {
                 Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
                 Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}`)}
         `)
+
+        console.log(`Challanger ${this.challangerPlayer.name} has amount of mana ${this.challangerPlayer.manaAmount}
+            and challange challangerPlayer
+            ${this.challangerPlayer.name} has amount of mana ${this.challangerPlayer.manaAmount}
+            started with ${this.challangerPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+            Challanger player can conjure this four creature card: ${this.challangerPlayer.creatureDeck.map(creature => `
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}`)}
+        `)
     }
 }
 
 class Main {
     private game: Game
 
-    private generateColor(): string {
-        let colors = new Array<string>()
-        colors.push(Color.RED_COLOR)
-        colors.push(Color.BLUE_COLOR)
-        let color = colors.sort(() => .5 - Math.random())[0]
-        return color
-    }
-
     constructor () {
         console.log('Game Started.')
         this.game = new Game(
             new BackToSchoolGamePlayer('Jefferson'),
-            new BackToSchoolGamePlayer('Icognito'))
+            new BackToSchoolGamePlayer('Amanda'))
         
-        this.game.player.manaDeck.push(new Mana(1, this.generateColor()))
-        this.game.player.manaDeck.push(new Mana(2, this.generateColor()))
-        this.game.player.manaDeck.push(new Mana(3, this.generateColor()))
-        this.game.player.manaDeck.push(new Mana(4, this.generateColor()))
+        console.log(`Player ${this.game.player.name} is oppening mana deck...`)
+        this.game.player.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
+        this.game.player.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
+        this.game.player.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
+        this.game.player.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
+        this.game.player.manaDeck.push(new Mana(1, Color.RED_COLOR))
+        this.game.player.manaDeck.push(new Mana(1, Color.RED_COLOR))
+        this.game.player.manaDeck.push(new Mana(2, Color.RED_COLOR))
+        this.game.player.manaDeck.push(new Mana(2, Color.RED_COLOR))
+
+        console.log(`Player ${this.game.player.name} is oppening creature deck...`)
+        this.game.player.creatureDeck.push(new Creature('Vampire', '', 4, Color.BLUE_COLOR, 4, 2))
+        this.game.player.creatureDeck.push(new Creature('Banshee', '', 3, Color.BLUE_COLOR, 3, 5))
+        this.game.player.creatureDeck.push(new Creature('Troll','', 1, Color.RED_COLOR, 1, 2))
+        this.game.player.creatureDeck.push(new Creature('Orc','', 2, Color.RED_COLOR, 3, 3))
 
 
+        console.log(`Player ${this.game.challangerPlayer.name} is oppening mana deck...`)
+        this.game.challangerPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
+        this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        this.game.player.creatureDeck.push(new Creature(
-            'Vampire',
-            '',
-            4,
-            Color.RED_COLOR,
-            4,
-            2
-        ))
-
-        this.game.player.creatureDeck.push(new Creature(
-            'Banshee',
-            '',
-            3,
-            Color.RED_COLOR,
-            3,
-            5
-        ))
-
-        this.game.player.creatureDeck.push(new Creature(
-            'Troll',
-            '',
-            1,
-            Color.BLUE_COLOR,
-            1,
-            2
-        ))
-
-        this.game.player.creatureDeck.push(new Creature(
-            'Orc',
-            '',
-            2,
-            Color.BLUE_COLOR,
-            3,
-            3
-        ))
+        console.log(`challangerPlayer ${this.game.challangerPlayer.name} is oppening creature deck...`)
+        this.game.challangerPlayer.creatureDeck.push(new Creature('Cyclops', '', 4, Color.BLUE_COLOR, 7, 1))
+        this.game.challangerPlayer.creatureDeck.push(new Creature('Amazon', '', 3, Color.BLUE_COLOR, 4, 3))
+        this.game.challangerPlayer.creatureDeck.push(new Creature('Djin','', 1, Color.RED_COLOR, 2, 1))
+        this.game.challangerPlayer.creatureDeck.push(new Creature('Linch','', 2, Color.RED_COLOR, 1, 8))
 
         this.game.start()
     }
