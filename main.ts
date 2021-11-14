@@ -92,10 +92,8 @@ class Game {
             ${this.player.name} has amount of mana ${this.player.manaAmount}
             started with ${this.player.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
             Player can conjure this four creature card: ${this.player.creatureDeck.map(creature => `
-                Creature name: ${creature.name}
-                Creature attack: ${creature.atack}
-                Creature defence: ${creature.defence}
-                Creature color: ${creature.color}
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
                 Creature conjured: ${creature.isConjured? 'in field and ready.' : 'not yet!'}`)}
         `)
     }
