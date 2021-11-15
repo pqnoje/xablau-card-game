@@ -71,7 +71,6 @@ class BackToSchoolGamePlayer implements Player {
         this.creatureDeck =  new Array<Creature>()
         this.manaAmount = 0
     }
-
 }
 
 class Game {
@@ -80,7 +79,8 @@ class Game {
     private readonly INITIAL_MANA_AMOUNT: number = 0
 
     constructor(
-        player: BackToSchoolGamePlayer, challangerPlayer: BackToSchoolGamePlayer) {
+        player: BackToSchoolGamePlayer, 
+        challangerPlayer: BackToSchoolGamePlayer) {
         this.player = player
         this.challangerPlayer = challangerPlayer
     }
@@ -132,7 +132,6 @@ class Main {
         this.game.player.creatureDeck.push(new Creature('Troll','', 1, Color.RED_COLOR, 1, 2))
         this.game.player.creatureDeck.push(new Creature('Orc','', 2, Color.RED_COLOR, 3, 3))
 
-
         console.log(`Player ${this.game.challangerPlayer.name} is oppening mana deck...`)
         this.game.challangerPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
         this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
@@ -143,7 +142,7 @@ class Main {
         this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
         this.game.challangerPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        console.log(`challangerPlayer ${this.game.challangerPlayer.name} is oppening creature deck...`)
+        console.log(`Challanger Player ${this.game.challangerPlayer.name} is oppening creature deck...`)
         this.game.challangerPlayer.creatureDeck.push(new Creature('Cyclops', '', 4, Color.BLUE_COLOR, 7, 1))
         this.game.challangerPlayer.creatureDeck.push(new Creature('Amazon', '', 3, Color.BLUE_COLOR, 4, 3))
         this.game.challangerPlayer.creatureDeck.push(new Creature('Djin','', 1, Color.RED_COLOR, 2, 1))
@@ -151,7 +150,6 @@ class Main {
 
         this.game.start()
     }
-    
 }
 
 new Main()
