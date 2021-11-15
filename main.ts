@@ -59,7 +59,8 @@ interface Player {
     name: string
     manaDeck: Array<Mana>
     creatureDeck: Array<Creature>
-    manaAmount: number
+    manaAmountBlue: number
+    manaAmountRed: number
     choosedManaDeck: Array<Mana>
     choosedCreatureDeck:  Array<Creature>
 }
@@ -68,7 +69,8 @@ class BackToSchoolGamePlayer implements Player {
     name: string
     manaDeck: Array<Mana>
     creatureDeck: Array<Creature>
-    manaAmount: number
+    manaAmountBlue: number
+    manaAmountRed: number
     choosedManaDeck: Array<Mana>
     choosedCreatureDeck:  Array<Creature>
     
@@ -76,7 +78,8 @@ class BackToSchoolGamePlayer implements Player {
         this.name = name
         this.manaDeck =  new Array<Mana>()
         this.creatureDeck =  new Array<Creature>()
-        this.manaAmount = 0
+        this.manaAmountBlue = 0
+        this.manaAmountRed = 0
         this.choosedManaDeck = new Array<Mana>()
         this.choosedCreatureDeck =  new Array<Creature>()
     }
@@ -85,9 +88,10 @@ interface Game {
     firstPlayer: BackToSchoolGamePlayer
     secondPlayer: BackToSchoolGamePlayer
 
-    conjureCard(player: BackToSchoolGamePlayer): number
-    chooseManaCardToConjure(player: BackToSchoolGamePlayer): Mana
-    chooseCreatureCardToConjure(player: BackToSchoolGamePlayer): Creature
+    chooseManaCardToConjure(player: BackToSchoolGamePlayer, index: number): Mana
+    chooseCreatureCardToConjure(player: BackToSchoolGamePlayer, index: number): Creature
+    conjureManaCard(player: BackToSchoolGamePlayer, index: number): void
+    conjureCreatureCard(player: BackToSchoolGamePlayer, index: number): void
 }
 
 class MortalKombatCardGame implements Game {
@@ -101,31 +105,39 @@ class MortalKombatCardGame implements Game {
         this.firstPlayer = player
         this.secondPlayer = challangerPlayer
     }
-
-    public conjureCard(player: BackToSchoolGamePlayer): number {
-        let remainingMana: number
-
-        return remainingMana
-    }
-
-    public chooseManaCardToConjure(player: BackToSchoolGamePlayer) : Mana {
-        let choosedManaCard = player.manaDeck[0]
+    public chooseManaCardToConjure(player: BackToSchoolGamePlayer, index: number) : Mana {
+        let choosedManaCard = player.manaDeck[index]
         player.choosedManaDeck.push(choosedManaCard)
         return choosedManaCard
     }
 
-    public chooseCreatureCardToConjure(player: BackToSchoolGamePlayer): Creature {
-        let choosedCreatureCard = player.creatureDeck[0]
+    public chooseCreatureCardToConjure(player: BackToSchoolGamePlayer, index: number): Creature {
+        let choosedCreatureCard = player.creatureDeck[index]
         player.choosedCreatureDeck.push(choosedCreatureCard)
         return choosedCreatureCard
     }
 
+    
+    public conjureManaCard(player: BackToSchoolGamePlayer, index: number) {
+        player.choosedManaDeck[index].isConjured = true
+        player.choosedManaDeck[index].color === Color.BLUE_COLOR? player.manaAmountBlue += player.choosedManaDeck[index].amount : player.manaAmountRed += player.choosedManaDeck[index].amount
+    }
+
+    public conjureCreatureCard(player: BackToSchoolGamePlayer, index: number) {
+        if(player.choosedCreatureDeck[index].color === Color.BLUE_COLOR) {
+            player.choosedCreatureDeck[index].manaNeeded <= player.manaAmountBlue
+            player.choosedCreatureDeck[index].isConjured = true
+            player.manaAmountBlue -= player.choosedCreatureDeck[index].manaNeeded
+        } else {
+            player.choosedCreatureDeck[index].manaNeeded <= player.manaAmountRed
+            player.choosedCreatureDeck[index].isConjured = true
+            player.manaAmountRed -= player.choosedCreatureDeck[index].manaNeeded
+        }
+    }
+
     public start() {
         console.log(`${this.firstPlayer.name} vs ${this.secondPlayer.name}`)
-        console.log(`Player ${this.firstPlayer.name} has amount of mana ${this.firstPlayer.manaAmount}
-            and challange player
-            ${this.firstPlayer.name} has amount of mana ${this.firstPlayer.manaAmount}
-            started with ${this.firstPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+        console.log(`Player ${this.firstPlayer.name} started with ${this.firstPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
             Player can conjure this four creature card: ${this.firstPlayer.creatureDeck.map((creature, index) => `
                 ____________________________________________________
                 Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
@@ -134,10 +146,7 @@ class MortalKombatCardGame implements Game {
                 ____________________________________________________`)}
         `)
 
-        console.log(`Challanger ${this.secondPlayer.name} has amount of mana ${this.secondPlayer.manaAmount}
-            and challange challangerPlayer
-            ${this.secondPlayer.name} has amount of mana ${this.secondPlayer.manaAmount}
-            started with ${this.secondPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+        console.log(`Challanger ${this.secondPlayer.name} started with ${this.secondPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
             Challanger player can conjure this four creature card: ${this.secondPlayer.creatureDeck.map((creature, index) => `
                 ____________________________________________________
                 Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
@@ -157,7 +166,7 @@ class Main {
             new BackToSchoolGamePlayer('Jefferson'),
             new BackToSchoolGamePlayer('Juliana'))
         
-        console.log(`Player ${this.cardGame.firstPlayer.name} is oppening mana deck...`)
+        console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening mana deck...`)
         this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
         this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
         this.cardGame.firstPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
@@ -167,13 +176,13 @@ class Main {
         this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
         this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        console.log(`Player ${this.cardGame.firstPlayer.name} is oppening creature deck...`)
+        console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening creature deck...`)
         this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sonia', '', 4, Color.BLUE_COLOR, 4, 2))
         this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sub-Zero', '', 3, Color.BLUE_COLOR, 3, 5))
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Scorpion','', 1, Color.RED_COLOR, 1, 2))
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Kung Lao','', 2, Color.RED_COLOR, 3, 3))
+        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Scorpion', '', 1, Color.RED_COLOR, 1, 2))
+        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Kung Lao', '', 2, Color.RED_COLOR, 3, 3))
 
-        console.log(`Player ${this.cardGame.secondPlayer.name} is oppening mana deck...`)
+        console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening mana deck...`)
         this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
         this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
         this.cardGame.secondPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
@@ -183,32 +192,40 @@ class Main {
         this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
         this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        console.log(`Challanger Player ${this.cardGame.secondPlayer.name} is oppening creature deck...`)
+        console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening creature deck...`)
         this.cardGame.secondPlayer.creatureDeck.push(new Creature('Jax Briggs', '', 4, Color.BLUE_COLOR, 7, 1))
         this.cardGame.secondPlayer.creatureDeck.push(new Creature('Liu Kang', '', 3, Color.BLUE_COLOR, 4, 3))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Shang Tsung','', 1, Color.RED_COLOR, 2, 1))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Noob Saibot','', 2, Color.RED_COLOR, 1, 8))
+        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Shang Tsung', '', 1, Color.RED_COLOR, 2, 1))
+        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Noob Saibot', '', 2, Color.RED_COLOR, 1, 8))
 
         this.cardGame.start()
 
-        var stdin = process.stdin
 
-        // without this, we would only get streams once enter is pressed
-        stdin.setRawMode(true)
+        console.info('Choose four Mana Card and two Creature Card!')
 
-        // resume stdin in the parent process (node app won't quit all by itself
-        // unless an error or process.exit() happens)
-        stdin.resume()
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 0)//1 mana points
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 1)//2 mana points
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 4)//1 mana points
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 5)//1 mana points
+        this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 0)
+        this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 1)
 
-        // IIiiiiiiihhh don't want binary, do you?
-        stdin.setEncoding('utf8')
+        console.info(`First Player has conjured a list of mana cards: 
+            ${this.cardGame.firstPlayer.choosedManaDeck.map(card => card.isConjured? `
+                ${card.amount} ${card.color} mana point(s)` : '')}`)
 
-        console.log('Player: choose your card...\n')
-        stdin.on( 'data', function( key ){
-            console.log(key)
-            process.stdout.write( key )
-        })
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 0)//Sonia
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 1)//Sub-Zero
+
+        this.cardGame.conjureCreatureCard(this.cardGame.firstPlayer, 1)
+
+        console.info(`First Player has conjured a list of creature cards: 
+            ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.isConjured? `
+                ${card.name} ~<>~ ${card.color}` : '')}`)
+
     }
 }
+
+console.info('connecting to the game!')
 
 new Main()
