@@ -91,18 +91,24 @@ class Game {
             and challange player
             ${this.player.name} has amount of mana ${this.player.manaAmount}
             started with ${this.player.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Player can conjure this four creature card: ${this.player.creatureDeck.map(creature => `
+            Player can conjure this four creature card: ${this.player.creatureDeck.map((creature, index) => `
+                ________________
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
                 Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
-                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}`)}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
+                ________________`)}
         `)
 
         console.log(`Challanger ${this.challangerPlayer.name} has amount of mana ${this.challangerPlayer.manaAmount}
             and challange challangerPlayer
             ${this.challangerPlayer.name} has amount of mana ${this.challangerPlayer.manaAmount}
             started with ${this.challangerPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Challanger player can conjure this four creature card: ${this.challangerPlayer.creatureDeck.map(creature => `
+            Challanger player can conjure this four creature card: ${this.challangerPlayer.creatureDeck.map((creature, index) => `
+                ________________
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
                 Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
-                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}`)}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
+                ________________`)}
         `)
     }
 }
@@ -114,7 +120,7 @@ class Main {
         console.log('Game Started.')
         this.game = new Game(
             new BackToSchoolGamePlayer('Jefferson'),
-            new BackToSchoolGamePlayer('Amanda'))
+            new BackToSchoolGamePlayer('Juliana'))
         
         console.log(`Player ${this.game.player.name} is oppening mana deck...`)
         this.game.player.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
