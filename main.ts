@@ -156,6 +156,27 @@ class MortalKombatCardGame implements Game {
                 ____________________________________________________`)}
         `)
     }
+
+    public showConjuredDeck() {
+        console.log(`${this.firstPlayer.name} vs ${this.secondPlayer.name}`)
+        console.log(`Player ${this.firstPlayer.name} started with ${this.firstPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+            Player owns creature cards: ${this.firstPlayer.choosedCreatureDeck.map((creature, index) => `
+                ____________________________________________________
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
+                ____________________________________________________`)}
+        `)
+
+        console.log(`Challanger ${this.secondPlayer.name} started with ${this.secondPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+            Challanger owns creature cards: ${this.secondPlayer.choosedCreatureDeck.map((creature, index) => `
+                ____________________________________________________
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
+                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
+                ____________________________________________________`)}
+        `)
+    }
 }
 
 class Main {
@@ -204,10 +225,10 @@ class Main {
 
         console.info('Choose four Mana Card and two Creature Card!')
 
-        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 0)//1 mana points
-        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 1)//2 mana points
-        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 4)//1 mana points
-        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 5)//1 mana points
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 0)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 1)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 4)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 5)
         this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 0)
         this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 1)
 
@@ -215,14 +236,16 @@ class Main {
             ${this.cardGame.firstPlayer.choosedManaDeck.map(card => card.conjured? `
                 ${card.amount} ${card.color} mana point(s)` : '')}`)
 
-        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 0)//Sonia
-        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 1)//Sub-Zero
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 0)
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 1)
 
         this.cardGame.conjureCreatureCard(this.cardGame.firstPlayer, 1)
 
         console.info(`First Player has conjured a list of creature cards: 
             ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
+
+        this.cardGame.showConjuredDeck()
 
     }
 }
