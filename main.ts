@@ -5,13 +5,13 @@ enum Color {
 
 interface Card {
     color: string
-    isConjured: boolean
+    conjured: boolean
 }
 
 class Mana implements Card {
     amount: number
     color: string
-    isConjured: boolean
+    conjured: boolean
     private readonly RED_COLOR: string = Color.RED_COLOR
     private readonly BLUE_COLOR: string = Color.BLUE_COLOR
     private readonly FIRST_ELEMENT: number = 0
@@ -28,10 +28,11 @@ class Creature implements Card {
     color: string
     name: string
     description: string
-    isConjured: boolean
+    conjured: boolean
     manaNeeded: number
     atack: number
     defence: number
+    defeated: boolean
 
     constructor(
         name: string,
@@ -52,7 +53,7 @@ class Creature implements Card {
 class Weapon implements Card {
     color: string
     aditionalAttack: number
-    isConjured: boolean
+    conjured: boolean
 }
 
 interface Player {
@@ -119,18 +120,18 @@ class MortalKombatCardGame implements Game {
 
     
     public conjureManaCard(player: BackToSchoolGamePlayer, index: number) {
-        player.choosedManaDeck[index].isConjured = true
+        player.choosedManaDeck[index].conjured = true
         player.choosedManaDeck[index].color === Color.BLUE_COLOR? player.manaAmountBlue += player.choosedManaDeck[index].amount : player.manaAmountRed += player.choosedManaDeck[index].amount
     }
 
     public conjureCreatureCard(player: BackToSchoolGamePlayer, index: number) {
         if(player.choosedCreatureDeck[index].color === Color.BLUE_COLOR) {
             player.choosedCreatureDeck[index].manaNeeded <= player.manaAmountBlue
-            player.choosedCreatureDeck[index].isConjured = true
+            player.choosedCreatureDeck[index].conjured = true
             player.manaAmountBlue -= player.choosedCreatureDeck[index].manaNeeded
         } else {
             player.choosedCreatureDeck[index].manaNeeded <= player.manaAmountRed
-            player.choosedCreatureDeck[index].isConjured = true
+            player.choosedCreatureDeck[index].conjured = true
             player.manaAmountRed -= player.choosedCreatureDeck[index].manaNeeded
         }
     }
@@ -141,7 +142,7 @@ class MortalKombatCardGame implements Game {
             Player can conjure this four creature card: ${this.firstPlayer.creatureDeck.map((creature, index) => `
                 ____________________________________________________
                 Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
-                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
                 Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
                 ____________________________________________________`)}
         `)
@@ -150,7 +151,7 @@ class MortalKombatCardGame implements Game {
             Challanger player can conjure this four creature card: ${this.secondPlayer.creatureDeck.map((creature, index) => `
                 ____________________________________________________
                 Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
-                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.isConjured? '^' : '*'}
+                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
                 Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
                 ____________________________________________________`)}
         `)
@@ -211,7 +212,7 @@ class Main {
         this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 1)
 
         console.info(`First Player has conjured a list of mana cards: 
-            ${this.cardGame.firstPlayer.choosedManaDeck.map(card => card.isConjured? `
+            ${this.cardGame.firstPlayer.choosedManaDeck.map(card => card.conjured? `
                 ${card.amount} ${card.color} mana point(s)` : '')}`)
 
         this.cardGame.chooseCreatureCardToConjure(this.cardGame.firstPlayer, 0)//Sonia
@@ -220,7 +221,7 @@ class Main {
         this.cardGame.conjureCreatureCard(this.cardGame.firstPlayer, 1)
 
         console.info(`First Player has conjured a list of creature cards: 
-            ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.isConjured? `
+            ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
 
     }
