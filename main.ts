@@ -93,6 +93,7 @@ interface Game {
     chooseCreatureCardToConjure(player: BackToSchoolGamePlayer, index: number): Creature
     conjureManaCard(player: BackToSchoolGamePlayer, index: number): void
     conjureCreatureCard(player: BackToSchoolGamePlayer, index: number): void
+    startBattle(firstPlayerCreature: Creature, secondPlayerCreature: Creature): void
 }
 
 class MortalKombatCardGame implements Game {
@@ -136,42 +137,32 @@ class MortalKombatCardGame implements Game {
         }
     }
 
-    public start() {
-        console.log(`${this.firstPlayer.name} vs ${this.secondPlayer.name}`)
-        console.log(`Player ${this.firstPlayer.name} started with ${this.firstPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Player can conjure this four creature card: ${this.firstPlayer.creatureDeck.map((creature, index) => `
-                ____________________________________________________
-                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
-                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
-                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
-                ____________________________________________________`)}
-        `)
+    public startBattle(attackCreature: Creature, defenceCreature: Creature) {
+        if(attackCreature.atack >= defenceCreature.defence) {
+            defenceCreature.defeated = true
+            console.info(`Second Player: Creature ${defenceCreature.name} has defeated.`)
+        } else if (attackCreature.atack < defenceCreature.defence) {
+            defenceCreature.defence -= attackCreature.atack
+            console.info(`Second Player: Creature ${defenceCreature.name} has defended and has ${defenceCreature.defence} defence points remaining.`)
+        }
+    }
 
-        console.log(`Challanger ${this.secondPlayer.name} started with ${this.secondPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Challanger player can conjure this four creature card: ${this.secondPlayer.creatureDeck.map((creature, index) => `
+    public showChoosedDeck(player: BackToSchoolGamePlayer) {
+        console.log(`Player ${player.name} started with ${player.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+            Player can conjure this four creature card: ${player.creatureDeck.map((creature, index) => `
                 ____________________________________________________
-                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence}) Mana needed: ${creature.manaNeeded}
                 Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
                 Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
                 ____________________________________________________`)}
         `)
     }
 
-    public showConjuredDeck() {
-        console.log(`${this.firstPlayer.name} vs ${this.secondPlayer.name}`)
-        console.log(`Player ${this.firstPlayer.name} started with ${this.firstPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Player owns creature cards: ${this.firstPlayer.choosedCreatureDeck.map((creature, index) => `
+    public showConjuredDeck(player: BackToSchoolGamePlayer) {
+        console.log(`Player ${player.name} started with ${player.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
+            Player owns creature cards: ${player.choosedCreatureDeck.map((creature, index) => `
                 ____________________________________________________
-                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
-                Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
-                Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
-                ____________________________________________________`)}
-        `)
-
-        console.log(`Challanger ${this.secondPlayer.name} started with ${this.secondPlayer.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Challanger owns creature cards: ${this.secondPlayer.choosedCreatureDeck.map((creature, index) => `
-                ____________________________________________________
-                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence})
+                Card ${index + 1} (A: ${creature.atack}, D: ${creature.defence}) Mana needed: ${creature.manaNeeded}
                 Creature color: ${creature.color} ~<>~ Creature name: ${creature.name}${creature.conjured? '^' : '*'}
                 Creature attack: ${creature.atack} ~<>~ Creature defence: ${creature.defence}
                 ____________________________________________________`)}
@@ -199,10 +190,12 @@ class Main {
         this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
         console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening creature deck...`)
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sonia', '', 4, Color.BLUE_COLOR, 4, 2))
+        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sonya Blade', '', 4, Color.BLUE_COLOR, 4, 2))
         this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sub-Zero', '', 3, Color.BLUE_COLOR, 3, 5))
         this.cardGame.firstPlayer.creatureDeck.push(new Creature('Scorpion', '', 1, Color.RED_COLOR, 1, 2))
         this.cardGame.firstPlayer.creatureDeck.push(new Creature('Kung Lao', '', 2, Color.RED_COLOR, 3, 3))
+
+        this.cardGame.showChoosedDeck(this.cardGame.firstPlayer)
 
         console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening mana deck...`)
         this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
@@ -216,11 +209,11 @@ class Main {
 
         console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening creature deck...`)
         this.cardGame.secondPlayer.creatureDeck.push(new Creature('Jax Briggs', '', 4, Color.BLUE_COLOR, 7, 1))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Liu Kang', '', 3, Color.BLUE_COLOR, 4, 3))
+        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Liu Kang', '', 3, Color.BLUE_COLOR, 4, 4))
         this.cardGame.secondPlayer.creatureDeck.push(new Creature('Shang Tsung', '', 1, Color.RED_COLOR, 2, 1))
         this.cardGame.secondPlayer.creatureDeck.push(new Creature('Noob Saibot', '', 2, Color.RED_COLOR, 1, 8))
 
-        this.cardGame.start()
+        this.cardGame.showChoosedDeck(this.cardGame.secondPlayer)
 
 
         console.info('Choose four Mana Card and two Creature Card!')
@@ -245,10 +238,10 @@ class Main {
             ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
 
-        this.cardGame.showConjuredDeck()
+        this.cardGame.showConjuredDeck(this.cardGame.firstPlayer)
 
 
-        console.info('Second player: choose four Mana Card and two Creature Card!')
+        console.info('Second Player: choose four Mana Card and two Creature Card!')
 
         this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 0)
         this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 1)
@@ -257,7 +250,7 @@ class Main {
         this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 0)
         this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 1)
 
-        console.info(`First Player has conjured a list of mana cards: 
+        console.info(`Second Player has conjured a list of mana cards: 
             ${this.cardGame.secondPlayer.choosedManaDeck.map(card => card.conjured? `
                 ${card.amount} ${card.color} mana point(s)` : '')}`)
 
@@ -266,10 +259,17 @@ class Main {
 
         this.cardGame.conjureCreatureCard(this.cardGame.secondPlayer, 1)
 
-        console.info(`First Player has conjured a list of creature cards: 
+        console.info(`Second Player has conjured a list of creature cards: 
             ${this.cardGame.secondPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
 
+        
+        this.cardGame.showConjuredDeck(this.cardGame.secondPlayer)
+
+        console.log('First Player choose one card to start the battle.')
+        this.cardGame.startBattle(this.cardGame.firstPlayer.choosedCreatureDeck[1], this.cardGame.secondPlayer.choosedCreatureDeck[1])
+        console.log('Second Player choose one card to start the battle.')
+        this.cardGame.startBattle(this.cardGame.secondPlayer.choosedCreatureDeck[1], this.cardGame.firstPlayer.choosedCreatureDeck[1])
     }
 }
 
