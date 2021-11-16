@@ -247,6 +247,29 @@ class Main {
 
         this.cardGame.showConjuredDeck()
 
+
+        console.info('Second player: choose four Mana Card and two Creature Card!')
+
+        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 0)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 1)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 4)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 5)
+        this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 0)
+        this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 1)
+
+        console.info(`First Player has conjured a list of mana cards: 
+            ${this.cardGame.secondPlayer.choosedManaDeck.map(card => card.conjured? `
+                ${card.amount} ${card.color} mana point(s)` : '')}`)
+
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.secondPlayer, 0)
+        this.cardGame.chooseCreatureCardToConjure(this.cardGame.secondPlayer, 1)
+
+        this.cardGame.conjureCreatureCard(this.cardGame.secondPlayer, 1)
+
+        console.info(`First Player has conjured a list of creature cards: 
+            ${this.cardGame.secondPlayer.choosedCreatureDeck.map(card => card.conjured? `
+                ${card.name} ~<>~ ${card.color}` : '')}`)
+
     }
 }
 
