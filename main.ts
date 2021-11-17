@@ -94,6 +94,7 @@ interface Game {
     conjureManaCard(player: BackToSchoolGamePlayer, index: number): void
     conjureCreatureCard(player: BackToSchoolGamePlayer, index: number): void
     startBattle(firstPlayerCreature: Creature, secondPlayerCreature: Creature): void
+    renderManaCard(mana: Mana): string
 }
 
 class MortalKombatCardGame implements Game {
@@ -168,6 +169,12 @@ class MortalKombatCardGame implements Game {
                 ____________________________________________________`)}
         `)
     }
+    
+    public renderManaCard(mana: Mana): string {
+        let renderedCard: string = ''
+        renderedCard = `${mana.color} ~<>~ ${mana.color} ~<>~ ${mana.conjured? '^': '*'}`
+        return renderedCard
+    }
 }
 
 class Main {
@@ -179,44 +186,50 @@ class Main {
             new BackToSchoolGamePlayer('Jefferson'),
             new BackToSchoolGamePlayer('Juliana'))
         
-        console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening mana deck...`)
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
-        this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
+        {
+            console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening mana deck...`)
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
+            this.cardGame.firstPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening creature deck...`)
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sonya Blade', '', 4, Color.BLUE_COLOR, 4, 2))
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sub-Zero', '', 3, Color.BLUE_COLOR, 3, 5))
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Scorpion', '', 1, Color.RED_COLOR, 1, 2))
-        this.cardGame.firstPlayer.creatureDeck.push(new Creature('Kung Lao', '', 2, Color.RED_COLOR, 3, 3))
+            console.info('First Player Choose four Mana Card and two Fighter Card!')
+            this.cardGame.secondPlayer.manaDeck.forEach((manaCard: Mana) => console.log(this.cardGame.renderManaCard(manaCard)))
 
-        this.cardGame.showChoosedDeck(this.cardGame.firstPlayer)
+            console.log(`First Player ${this.cardGame.firstPlayer.name} is oppening fighter deck...`)
+            this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sonya Blade', '', 4, Color.BLUE_COLOR, 4, 2))
+            this.cardGame.firstPlayer.creatureDeck.push(new Creature('Sub-Zero', '', 3, Color.BLUE_COLOR, 3, 5))
+            this.cardGame.firstPlayer.creatureDeck.push(new Creature('Scorpion', '', 1, Color.RED_COLOR, 1, 2))
+            this.cardGame.firstPlayer.creatureDeck.push(new Creature('Kung Lao', '', 2, Color.RED_COLOR, 3, 3))
 
-        console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening mana deck...`)
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
-        this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
+            this.cardGame.showChoosedDeck(this.cardGame.firstPlayer)
 
-        console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening creature deck...`)
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Jax Briggs', '', 4, Color.BLUE_COLOR, 7, 1))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Liu Kang', '', 3, Color.BLUE_COLOR, 4, 4))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Shang Tsung', '', 1, Color.RED_COLOR, 2, 1))
-        this.cardGame.secondPlayer.creatureDeck.push(new Creature('Noob Saibot', '', 2, Color.RED_COLOR, 1, 8))
+            console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening mana deck...`)
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.BLUE_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.BLUE_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(3, Color.BLUE_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(4, Color.BLUE_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(1, Color.RED_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
+            this.cardGame.secondPlayer.manaDeck.push(new Mana(2, Color.RED_COLOR))
 
-        this.cardGame.showChoosedDeck(this.cardGame.secondPlayer)
+            console.log(`Second Player ${this.cardGame.secondPlayer.name} is oppening fighter deck...`)
+            this.cardGame.secondPlayer.creatureDeck.push(new Creature('Jax Briggs', '', 4, Color.BLUE_COLOR, 7, 1))
+            this.cardGame.secondPlayer.creatureDeck.push(new Creature('Liu Kang', '', 3, Color.BLUE_COLOR, 4, 4))
+            this.cardGame.secondPlayer.creatureDeck.push(new Creature('Shang Tsung', '', 1, Color.RED_COLOR, 2, 1))
+            this.cardGame.secondPlayer.creatureDeck.push(new Creature('Noob Saibot', '', 2, Color.RED_COLOR, 1, 8))
 
+            this.cardGame.showChoosedDeck(this.cardGame.secondPlayer)
+        }
 
-        console.info('Choose four Mana Card and two Creature Card!')
+        console.info('Player One: Choose four Mana Card and two Fighter Card!')
+
+        this.cardGame.secondPlayer.manaDeck.forEach((manaCard: Mana) => console.log(this.cardGame.renderManaCard(manaCard)))
 
         this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 0)
         this.cardGame.chooseManaCardToConjure(this.cardGame.firstPlayer, 1)
@@ -225,7 +238,7 @@ class Main {
         this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 0)
         this.cardGame.conjureManaCard(this.cardGame.firstPlayer, 1)
 
-        console.info(`First Player has conjured a list of mana cards: 
+        console.info(`Player One has conjured a list of mana cards: 
             ${this.cardGame.firstPlayer.choosedManaDeck.map(card => card.conjured? `
                 ${card.amount} ${card.color} mana point(s)` : '')}`)
 
@@ -234,23 +247,24 @@ class Main {
 
         this.cardGame.conjureCreatureCard(this.cardGame.firstPlayer, 1)
 
-        console.info(`First Player has conjured a list of creature cards: 
+        console.info(`Player One has conjured a list of fighter cards: 
             ${this.cardGame.firstPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
 
         this.cardGame.showConjuredDeck(this.cardGame.firstPlayer)
 
+        console.info('Player Two: choose four Mana Cards and two Fighter Cards.')
 
-        console.info('Second Player: choose four Mana Card and two Creature Card!')
+        this.cardGame.secondPlayer.manaDeck.forEach((manaCard: Mana) => console.log(this.cardGame.renderManaCard(manaCard)))
 
-        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 0)
+        this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 1)
         this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 1)
         this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 4)
         this.cardGame.chooseManaCardToConjure(this.cardGame.secondPlayer, 5)
         this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 0)
         this.cardGame.conjureManaCard(this.cardGame.secondPlayer, 1)
 
-        console.info(`Second Player has conjured a list of mana cards: 
+        console.info(`Player Two has conjured a list of mana cards: 
             ${this.cardGame.secondPlayer.choosedManaDeck.map(card => card.conjured? `
                 ${card.amount} ${card.color} mana point(s)` : '')}`)
 
@@ -259,20 +273,23 @@ class Main {
 
         this.cardGame.conjureCreatureCard(this.cardGame.secondPlayer, 1)
 
-        console.info(`Second Player has conjured a list of creature cards: 
+        console.info(`Player Two has conjured a list of fighter card: 
             ${this.cardGame.secondPlayer.choosedCreatureDeck.map(card => card.conjured? `
                 ${card.name} ~<>~ ${card.color}` : '')}`)
 
         
         this.cardGame.showConjuredDeck(this.cardGame.secondPlayer)
 
-        console.log('First Player choose one card to start the battle.')
+        console.log('Player One choose one card to start the battle.')
         this.cardGame.startBattle(this.cardGame.firstPlayer.choosedCreatureDeck[1], this.cardGame.secondPlayer.choosedCreatureDeck[1])
-        console.log('Second Player choose one card to start the battle.')
+        console.log('Player Two choose one card to start the battle.')
         this.cardGame.startBattle(this.cardGame.secondPlayer.choosedCreatureDeck[1], this.cardGame.firstPlayer.choosedCreatureDeck[1])
+        console.log('Player One choose one card to start the battle.')
+        this.cardGame.startBattle(this.cardGame.firstPlayer.choosedCreatureDeck[1], this.cardGame.secondPlayer.choosedCreatureDeck[1])
     }
 }
 
 console.info('connecting to the game!')
 
 new Main()
+
