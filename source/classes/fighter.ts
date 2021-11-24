@@ -22,4 +22,10 @@ export class Fighter implements Card {
             this.color = color
             this.defence = defence
         }
+
+    toString(): string {
+        let card: string = ''
+        card = `name: ${this.name} ~<>~ mana needed: ${this.manaNeeded} ~<>~ defence: ${this.defence} ~<>~ color: ${this.color} ~<>~ conjured: ${this.conjured? 'yes': 'no'} ~<>~ defeated: ${this.defeated ? 'yes' : 'no'}`
+        return card
+    }
 }

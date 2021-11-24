@@ -7,6 +7,4 @@ export interface Player {
     fighterDeck: Array<Fighter>
     manaAmountBlue: number
     manaAmountRed: number
-    choosedManaDeck: Array<Mana>
-    choosedFighterDeck:  Array<Fighter>
 }

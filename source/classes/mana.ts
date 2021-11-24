@@ -15,4 +15,10 @@ export class Mana implements Card {
         this.amount = amount
         this.color = color
     }
+
+    toString(): string {
+        let card: string = ''
+        card = `mana: ${this.amount} ~<>~ color: ${this.color} ~<>~ conjured: ${this.conjured? 'yes': 'no'}`
+        return card
+    }
 }

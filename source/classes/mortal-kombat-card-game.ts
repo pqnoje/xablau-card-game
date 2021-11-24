@@ -15,33 +15,20 @@ export class MortalKombatCardGame implements Game {
         this.firstPlayer = player
         this.secondPlayer = challangerPlayer
     }
-    public chooseManaCardToConjure(player: GamePlayer, index: number) : Mana {
-        let choosedManaCard = player.manaDeck[index]
-        player.choosedManaDeck.push(choosedManaCard)
-        return choosedManaCard
-    }
-
-    public chooseFighterCardToConjure(player: GamePlayer, index: number): Fighter {
-        let choosedFighterCard = player.fighterDeck[index]
-        player.choosedFighterDeck.push(choosedFighterCard)
-        return choosedFighterCard
-    }
-
     
     public conjureManaCard(player: GamePlayer, index: number) {
-        player.choosedManaDeck[index].conjured = true
-        player.choosedManaDeck[index].color === Color.BLUE_COLOR? player.manaAmountBlue += player.choosedManaDeck[index].amount : player.manaAmountRed += player.choosedManaDeck[index].amount
+        player.manaDeck[index].conjured = true
+        player.manaDeck[index].color === Color.BLUE_COLOR? player.manaAmountBlue += player.manaDeck[index].amount : player.manaAmountRed += player.manaDeck[index].amount
     }
 
-    public conjureFighterCard(player: GamePlayer, index: number) {
-        if(player.choosedFighterDeck[index].color === Color.BLUE_COLOR) {
-            player.choosedFighterDeck[index].manaNeeded <= player.manaAmountBlue
-            player.choosedFighterDeck[index].conjured = true
-            player.manaAmountBlue -= player.choosedFighterDeck[index].manaNeeded
-        } else {
-            player.choosedFighterDeck[index].manaNeeded <= player.manaAmountRed
-            player.choosedFighterDeck[index].conjured = true
-            player.manaAmountRed -= player.choosedFighterDeck[index].manaNeeded
+    public conjureFighterCard(player: GamePlayer, fighter: Fighter) {
+        if(fighter.color === Color.BLUE_COLOR && player.manaAmountBlue > 0 && player.manaAmountBlue >= fighter.manaNeeded) {
+            fighter.conjured = true
+            player.manaAmountBlue = player.manaAmountBlue - fighter.manaNeeded
+        }
+        if(fighter.color === Color.RED_COLOR && player.manaAmountRed > 0 && player.manaAmountRed >= fighter.manaNeeded) {
+            fighter.conjured = true
+            player.manaAmountRed = player.manaAmountRed - fighter.manaNeeded
         }
     }
 
@@ -68,7 +55,7 @@ export class MortalKombatCardGame implements Game {
 
     public showConjuredDeck(player: GamePlayer) {
         console.log(`Player ${player.name} started with ${player.manaDeck.reduce((accumulator, initial, index, array) => accumulator + initial.amount, this.INITIAL_MANA_AMOUNT)} amount of mana.
-            Player owns creature cards: ${player.choosedFighterDeck.map((fighter, index) => `
+            Player owns creature cards: ${player.fighterDeck.map((fighter, index) => `
                 ____________________________________________________
                 Card ${index + 1} (A: ${fighter.manaNeeded}, D: ${fighter.defence}) Mana needed: ${fighter.manaNeeded}
                 Creature color: ${fighter.color} ~<>~ Fighter name: ${fighter.name}${fighter.conjured? '^' : '*'}
